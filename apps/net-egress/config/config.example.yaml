@@ -1,0 +1,54 @@
+mixed-port: 7891
+bind-address: 0.0.0.0
+allow-lan: true
+mode: rule
+log-level: info
+external-controller: 0.0.0.0:9099
+secret: CHANGE_ME
+
+dns:
+  enable: true
+  ipv6: false
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+
+proxies:
+  - name: EGRESS-1
+    type: vless
+    server: CHANGE_ME
+    port: 443
+    uuid: CHANGE_ME
+    network: ws
+    tls: true
+    udp: true
+    servername: CHANGE_ME
+    client-fingerprint: firefox
+    ws-opts:
+      path: "/CHANGE_ME"
+      headers:
+        Host: CHANGE_ME
+  - name: EGRESS-2
+    type: trojan
+    server: CHANGE_ME
+    port: 443
+    password: CHANGE_ME
+    network: ws
+    udp: true
+    sni: CHANGE_ME
+
+proxy-groups:
+  - name: EGRESS
+    type: url-test
+    url: https://www.gstatic.com/generate_204
+    interval: 180
+    tolerance: 50
+    proxies: [EGRESS-1, EGRESS-2]
+
+rules:
+  - MATCH,EGRESS

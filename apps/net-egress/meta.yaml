@@ -1,0 +1,27 @@
+slug: net-egress
+name: 出网代理
+branch: app/net-egress
+kind: docker-run
+layer: net
+status: stopped
+project: /opt/net-egress
+containers:
+  - name: net-egress
+    image: clash-proxy-manager:latest
+    command: ["-d", "/root/.config/mihomo"]
+    entrypoint: ["/usr/local/bin/mihomo"]
+    ports: ["127.0.0.1:7891:7891", "127.0.0.1:9099:9099"]
+    volumes: ["/opt/net-egress:/root/.config/mihomo"]
+    network: bridge
+    restart: unless-stopped
+    healthcheck: none
+env:
+  file: null
+  keys: []
+paths:
+  config: /opt/net-egress/config.yaml
+  run: run.sh
+depends_on: []
+notes:
+  - 仅本机使用
+  - 镜像为本地 clash-proxy-manager
