@@ -1,0 +1,25 @@
+slug: x01-sec-mitmproxy
+name: mitmproxy / mitmweb
+branch: app/x01-sec-mitmproxy
+kind: docker-compose
+layer: sec
+status: stopped
+project: /home/dev/infra/sec/mitmproxy
+containers:
+  - name: x01-sec-mitmproxy
+    image: mitmproxy/mitmproxy:latest
+    ports: ["8080:8080", "8081:8081"]
+    volumes: ["./data:/home/mitmproxy/.mitmproxy"]
+    network: x01-sec-mitmproxy_default
+    restart: unless-stopped
+    healthcheck: "curl -x http://127.0.0.1:8080 http://example.com"
+env:
+  file: .env
+  keys: [MITMWEB_PASSWORD]
+paths:
+  compose: compose.yaml
+  data: ./data
+depends_on: []
+notes:
+  - 8081 与 clash-proxy-demo 冲突
+  - CA 私钥在 data/mitmproxy-ca.pem
