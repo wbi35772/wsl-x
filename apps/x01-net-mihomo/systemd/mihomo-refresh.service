@@ -1,0 +1,10 @@
+[Unit]
+Description=mihomo refresh providers
+After=network-online.target mihomo.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=mihomo
+Group=mihomo
+ExecStart=/home/dev/infra/net/mihomo/bin/refresh-providers

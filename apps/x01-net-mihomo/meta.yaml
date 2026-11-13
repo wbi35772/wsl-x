@@ -1,0 +1,37 @@
+slug: x01-net-mihomo
+name: mihomo (Clash.Meta)
+branch: app/x01-net-mihomo
+kind: systemd
+layer: net
+status: running
+project: /home/dev/infra/net/mihomo
+containers: []
+service:
+  unit: mihomo.service
+  user: mihomo
+  uid: 994
+  restart: always
+  restart_sec: 3
+  ports:
+    - "7890/tcp mixed"
+    - "127.0.0.1:9090 API+UI"
+    - "127.0.0.1:53 DNS"
+  tun: x01tun0
+  fake_ip: 198.18.0.0/16
+units:
+  - mihomo-uidrule.service
+  - mihomo-refresh.service
+  - mihomo-refresh.timer
+env:
+  file: null
+  keys: []
+paths:
+  bin: bin/mihomo
+  config: config/config.yaml
+  providers: config/providers
+  ui: ui
+depends_on: []
+notes:
+  - DNS 单点，停服即无解析
+  - uid 994 需要 ip rule 绕过 TUN
+  - refresh.timer 已于 2026-10-29 停用

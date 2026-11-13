@@ -1,0 +1,80 @@
+mixed-port: 7890
+allow-lan: true
+bind-address: "*"
+mode: rule
+log-level: info
+external-controller: 127.0.0.1:9090
+secret: CHANGE_ME
+external-ui: ui
+
+tun:
+  enable: true
+  stack: gvisor
+  device: x01tun0
+  auto-route: true
+  auto-detect-interface: false
+  dns-hijack: ["any:53"]
+  mtu: 9000
+
+dns:
+  enable: true
+  listen: 127.0.0.1:53
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  nameserver:
+    - https://1.1.1.1/dns-query
+    - https://8.8.8.8/dns-query
+  proxy-server-nameserver:
+    - https://1.1.1.1/dns-query
+
+proxy-providers:
+  aur:
+    type: file
+    path: ./providers/aur.yaml
+    interval: 0
+    health-check: { enable: true, url: https://www.gstatic.com/generate_204, interval: 600 }
+  ruk:
+    type: file
+    path: ./providers/ruk.yaml
+    interval: 0
+    health-check: { enable: true, url: https://www.gstatic.com/generate_204, interval: 600 }
+  cf4:
+    type: file
+    path: ./providers/cf4.yaml
+    interval: 0
+    health-check: { enable: true, url: https://www.gstatic.com/generate_204, interval: 600 }
+  free18:
+    type: file
+    path: ./providers/free18.yaml
+    interval: 0
+  v2rayn:
+    type: file
+    path: ./providers/v2rayn.yaml
+    interval: 0
+
+proxy-groups:
+  - name: "🚀 节点选择"
+    type: select
+    proxies: ["🔯 故障转移", "♻️ 自动选择", "DIRECT"]
+  - name: "🔯 故障转移"
+    type: fallback
+    interval: 300
+    use: [aur, ruk, cf4, free18]
+  - name: "♻️ 自动选择"
+    type: url-test
+    interval: 900
+    url: https://www.gstatic.com/generate_204
+    use: [aur, ruk]
+  - name: "🌐 全球直连"
+    type: select
+    proxies: [DIRECT]
+
+rules:
+  - DOMAIN-SUFFIX,pypi.org,DIRECT
+  - DOMAIN-SUFFIX,pythonhosted.org,DIRECT
+  - DOMAIN-SUFFIX,ubuntu.com,DIRECT
+  - DOMAIN-SUFFIX,debian.org,DIRECT
+  - MATCH,🚀 节点选择

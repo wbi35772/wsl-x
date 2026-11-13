@@ -1,0 +1,14 @@
+[Unit]
+Description=mihomo uid rule (bypass TUN for mihomo itself)
+Before=mihomo.service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/sbin/ip rule add uidrange 994-994 lookup main pref 8999
+ExecStop=/sbin/ip rule del uidrange 994-994 lookup main pref 8999
+
+[Install]
+WantedBy=multi-user.target
