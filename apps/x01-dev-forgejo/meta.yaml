@@ -1,0 +1,35 @@
+slug: x01-dev-forgejo
+name: Forgejo 15 + MySQL 8.4
+branch: app/x01-dev-forgejo
+kind: docker-compose
+layer: dev
+status: stopped
+project: /home/dev/infra/dev/forgejo
+containers:
+  - name: x01-dev-forgejo-db
+    image: mysql:8.4.11
+    role: db
+    ports: []
+    volumes: ["./data/db:/var/lib/mysql"]
+    network: x01-dev-forgejo_default
+    restart: unless-stopped
+    healthcheck: "mysqladmin ping -h 127.0.0.1 -uroot -p***"
+  - name: x01-dev-forgejo
+    image: codeberg.org/forgejo/forgejo:15.0.3
+    role: app
+    ports: ["3005:3000", "222:22"]
+    volumes: ["./data/forgejo:/data", "./conf/app.ini:/data/gitea/conf/app.ini"]
+    network: x01-dev-forgejo_default
+    restart: unless-stopped
+    depends_on: [x01-dev-forgejo-db]
+env:
+  file: .env
+  keys: [MYSQL_ROOT_PASSWORD]
+paths:
+  compose: compose.yaml
+  config: conf/app.ini
+  data: ./data
+depends_on: []
+notes:
+  - app.ini 内 HOST 必须为 mysql:3306
+  - ROOT_URL 需按访问地址调整

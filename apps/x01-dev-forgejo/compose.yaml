@@ -1,0 +1,54 @@
+name: x01-dev-forgejo
+
+services:
+  mysql:
+    image: mysql:8.4.11
+    container_name: x01-dev-forgejo-db
+    restart: unless-stopped
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_0900_as_cs
+      - --innodb-buffer-pool-size=256M
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      TZ: UTC
+    volumes:
+      - ./data/db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+    labels:
+      x01.layer: dev
+      x01.module: forgejo
+      x01.role: db
+    logging:
+      driver: json-file
+      options: { max-size: "20m", max-file: "3" }
+
+  forgejo:
+    image: codeberg.org/forgejo/forgejo:15.0.3
+    container_name: x01-dev-forgejo
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      USER_UID: 1000
+      USER_GID: 1000
+      TZ: UTC
+    ports:
+      - "3005:3000"
+      - "222:22"
+    volumes:
+      - ./data/forgejo:/data
+      - ./conf/app.ini:/data/gitea/conf/app.ini
+    labels:
+      x01.layer: dev
+      x01.module: forgejo
+      x01.role: app
+    logging:
+      driver: json-file
+      options: { max-size: "20m", max-file: "3" }
