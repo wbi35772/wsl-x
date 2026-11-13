@@ -1,0 +1,25 @@
+slug: x01-ops-portainer
+name: Portainer CE
+branch: app/x01-ops-portainer
+kind: docker-compose
+layer: ops
+status: stopped
+project: /home/dev/infra/ops/portainer
+containers:
+  - name: x01-ops-portainer
+    image: portainer/portainer-ce:latest
+    ports: ["9443:9443"]
+    volumes: ["/var/run/docker.sock:/var/run/docker.sock", "./data:/data"]
+    network: x01-ops-portainer_default
+    restart: unless-stopped
+    healthcheck: none
+env:
+  file: null
+  keys: []
+paths:
+  compose: compose.yaml
+  data: ./data
+depends_on: []
+notes:
+  - 挂载 docker.sock，权限等同宿主机 root
+  - 停止时退出码 2 正常

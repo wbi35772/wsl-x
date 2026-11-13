@@ -1,0 +1,19 @@
+name: x01-ops-portainer
+
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: x01-ops-portainer
+    command: ["--no-setup-token"]
+    restart: unless-stopped
+    ports:
+      - "9443:9443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data:/data
+    labels:
+      x01.layer: ops
+      x01.module: portainer
+    logging:
+      driver: json-file
+      options: { max-size: "20m", max-file: "3" }
