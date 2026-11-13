@@ -23,7 +23,11 @@
 apps/<slug>/
 ├─ README.md     人读：定位、端口、卷、启停、备份、真实路径、注意
 ├─ meta.yaml     机器可读：状态、容器、镜像、端口、卷、网络、路径、凭据键
-└─ env.example   变量名 + CHANGE_ME（仅收录索引中已记录/标准镜像的键）
+├─ env.example   变量名 + CHANGE_ME（仅收录索引中已记录/标准镜像的键）
+├─ compose.yaml  compose 单元（docker-compose 类）
+├─ run.sh        docker run 单元（无 compose 的容器）
+├─ systemd/      原生服务单元（systemd 类）
+└─ config/       配置模板；真实配置与密钥不入库
 ```
 
 ## 恢复顺序

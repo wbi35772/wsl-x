@@ -8,7 +8,7 @@
 | 分支 | 作用 | 内容 |
 |---|---|---|
 | `main` | 系统级协调与调度 | `system/` 系统档案（01–08）+ `apps/README.md` 总表 |
-| `app/<slug>` | 一个可部署单元 | `apps/<slug>/README.md`、`meta.yaml`、`env.example` |
+| `app/<slug>` | 一个可部署单元 | `apps/<slug>/`：`README.md`、`meta.yaml`、`env.example`，以及该单元的 `compose.yaml` / `run.sh` / `systemd/` / `config/` |
 
 命名规则：
 
