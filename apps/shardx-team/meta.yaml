@@ -1,0 +1,31 @@
+slug: shardx-team
+name: ShardX 团队服务
+branch: app/shardx-team
+kind: docker-run
+layer: app
+status: stopped
+project: null
+containers:
+  - name: shardx-team
+    image: ghcr.io/proxyshard/shardbrowser-team-server:latest
+    ports: ["8787:8787"]
+    volumes: ["shardx-team-data:/data"]
+    network: bridge
+    restart: "no"
+    healthcheck: none
+env:
+  file: null
+  keys:
+    - SHARDBROWSER_TEAM_NAME
+    - SHARDBROWSER_TEAM_BIND
+    - SHARDBROWSER_TEAM_PUBLIC_URL
+    - SHARDBROWSER_TEAM_DATA_DIR
+    - RUST_LOG
+    - SSL_CERT_FILE
+paths:
+  run: run.sh
+  data_volume: shardx-team-data
+depends_on: []
+notes:
+  - 无源码目录
+  - 删卷会丢数据
