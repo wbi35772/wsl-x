@@ -1,0 +1,26 @@
+name: x01-sec-mobsf
+
+services:
+  mobsf:
+    image: opensecurity/mobile-security-framework-mobsf:latest
+    container_name: x01-sec-mobsf
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      MOBSF_ANALYZER_IDENTIFIER: ${MOBSF_ANALYZER_IDENTIFIER:-}
+      MOBSF_API_KEY: ${MOBSF_API_KEY:-x01-mobsf-key}
+    volumes:
+      - ./data:/home/mobsf/.MobSF
+    labels:
+      x01.layer: sec
+      x01.module: mobsf
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8000/ >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 90s
+    logging:
+      driver: json-file
+      options: { max-size: "20m", max-file: "3" }

@@ -1,0 +1,25 @@
+slug: x01-sec-mobsf
+name: MobSF
+branch: app/x01-sec-mobsf
+kind: docker-compose
+layer: sec
+status: stopped
+project: /home/dev/infra/sec/mobsf
+containers:
+  - name: x01-sec-mobsf
+    image: opensecurity/mobile-security-framework-mobsf:latest
+    ports: ["8000:8000"]
+    volumes: ["./data:/home/mobsf/.MobSF"]
+    network: x01-sec-mobsf_default
+    restart: unless-stopped
+    healthcheck: "curl -fsS http://127.0.0.1:8000/"
+env:
+  file: .env
+  keys: [MOBSF_API_KEY, MOBSF_ANALYZER_IDENTIFIER]
+paths:
+  compose: compose.yaml
+  data: ./data
+depends_on: []
+notes:
+  - 数据目录 uid 9901
+  - 默认 Web 账号应修改
