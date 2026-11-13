@@ -1,0 +1,28 @@
+slug: clash-proxy-demo
+name: clash-proxy-manager 实验
+branch: app/clash-proxy-demo
+kind: docker-run
+layer: experiment
+status: deprecated
+project: /home/dev/demo/clash-proxy
+containers:
+  - name: clash-proxy-demo
+    image: clash-proxy-manager:latest
+    ports: []
+    network_mode: host
+    volumes: ["./config:/root/.config/mihomo"]
+    restart: "no"
+    healthcheck: none
+  - name: clash-proxy-demo.bak
+    image: clash-proxy-manager:latest
+    note: 旧副本
+env:
+  file: null
+  keys: [MIHOMO_MIXED_PORT, DASHBOARD_PORT, PORT_START, MIHOMO_CONTROLLER, MIHOMO_API, GATE_HOST_IP]
+paths:
+  config: ~/demo/clash-proxy/config
+depends_on: []
+notes:
+  - restart=no
+  - 8081 与 mitmweb 冲突
+  - 需要 DASHBOARD_PORT=8085
