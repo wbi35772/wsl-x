@@ -1,0 +1,20 @@
+[
+  {
+    "task_name": "示例任务",
+    "enabled": false,
+    "keyword": "CHANGE_ME",
+    "description": "成色、配件、信用等筛选描述",
+    "max_pages": 10,
+    "personal_only": true,
+    "min_price": "1000",
+    "max_price": "3000",
+    "cron": null,
+    "ai_prompt_base_file": "prompts/base_prompt.txt",
+    "ai_prompt_criteria_file": "prompts/CHANGE_ME.txt",
+    "account_state_file": "state/acc1.json",
+    "free_shipping": true,
+    "new_publish_option": "14天内",
+    "region": "CHANGE_ME",
+    "is_running": false
+  }
+]

@@ -1,0 +1,90 @@
+slug: goofish-hardware-sniper
+name: 闲鱼硬件好价监控
+branch: app/goofish-hardware-sniper
+kind: docker-compose
+layer: app
+status: running
+project: /mnt/d/goofish-hardware-sniper
+containers:
+  - name: goofish-hardware-sniper
+    image: goofish-hardware-sniper:local
+    build: .
+    ports: ["0.0.0.0:8086:8000"]
+    volumes:
+      - ".env:/app/.env"
+      - "./data:/app/data"
+      - "./state:/app/state"
+      - "./accounts:/app/accounts"
+      - "./config.json:/app/config.json"
+      - "./prompts:/app/prompts"
+      - "./jsonl:/app/jsonl"
+      - "./logs:/app/logs"
+      - "./images:/app/images"
+      - "./price_history:/app/price_history"
+      - "./scripts:/app/scripts"
+    network: goofish-hardware-sniper_default
+    restart: unless-stopped
+    healthcheck: "http://127.0.0.1:8000/health"
+env:
+  file: .env
+  keys:
+    - OPENAI_API_KEY
+    - OPENAI_BASE_URL
+    - OPENAI_BASE_URL_FALLBACK
+    - OPENAI_MODEL_NAME
+    - SERVER_PORT
+    - WEB_USERNAME
+    - WEB_PASSWORD
+    - RUN_HEADLESS
+    - LOGIN_IS_EDGE
+    - PCURL_TO_MOBILE
+    - AI_DEBUG_MODE
+    - PROXY_URL
+    - ENABLE_THINKING
+    - ENABLE_RESPONSE_FORMAT
+    - NTFY_TOPIC_URL
+    - PUSHPLUS_TOKEN
+    - PUSHPLUS_TOPIC
+    - BARK_URL
+    - WX_BOT_URL
+    - TELEGRAM_BOT_TOKEN
+    - TELEGRAM_CHAT_ID
+    - TELEGRAM_API_BASE_URL
+    - GOTIFY_URL
+    - GOTIFY_TOKEN
+    - WEBHOOK_URL
+    - WEBHOOK_METHOD
+    - WEBHOOK_CONTENT_TYPE
+    - WEBHOOK_HEADERS
+    - WEBHOOK_QUERY_PARAMETERS
+    - WEBHOOK_BODY
+    - TASK_FAILURE_THRESHOLD
+    - TASK_FAILURE_PAUSE_SECONDS
+    - TASK_FAILURE_GUARD_PATH
+    - TASK_LOG_RETENTION_DAYS
+    - PROXY_ROTATION_ENABLED
+    - PROXY_ROTATION_MODE
+    - PROXY_POOL
+    - PROXY_ROTATION_RETRY_LIMIT
+    - PROXY_BLACKLIST_TTL
+    - BROWSER_CDP_URL
+    - ACCOUNT_STATE_DIR
+    - HOST_GATEWAY_IP
+    - AI_ANALYSIS_CONCURRENCY
+    - AI_IMAGE_MAX_COUNT
+    - AI_IMAGE_MAX_SIDE
+    - AI_IMAGE_JPEG_QUALITY
+    - DETAIL_FETCH_LIMIT_PER_RUN
+    - PRE_LLM_FILTER_ENABLED
+    - PRE_LLM_FILTER_EXTRA_KEYWORDS
+    - SCHEDULER_JITTER_MIN_SECONDS
+    - SCHEDULER_JITTER_MAX_SECONDS
+    - SKIP_AI_ANALYSIS
+paths:
+  compose: docker-compose.yaml
+  data: ./data
+  windows: D:\goofish-hardware-sniper
+depends_on: []
+notes:
+  - 需要 DNS / mihomo 正常
+  - 掉登录依赖 Windows Chrome CDP 9223
