@@ -1,0 +1,26 @@
+slug: x01-data-postgres
+name: PostgreSQL 15
+branch: app/x01-data-postgres
+kind: docker-compose
+layer: data
+status: stopped
+project: /home/dev/infra/data/postgres
+containers:
+  - name: x01-data-postgres
+    image: postgres:15
+    ports: ["127.0.0.1:5432:5432"]
+    volumes: ["./data:/var/lib/postgresql/data"]
+    network: x01-data-net
+    restart: unless-stopped
+    healthcheck: "pg_isready -U astock -d cx_dashboard"
+env:
+  file: .env
+  keys: [POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB]
+paths:
+  compose: compose.yaml
+  data: ./data
+depends_on: []
+notes:
+  - 数据目录 uid 999
+  - 强停后恢复约 4 分钟
+  - x01-data-net 为 external 网络
