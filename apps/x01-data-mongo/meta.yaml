@@ -1,0 +1,25 @@
+slug: x01-data-mongo
+name: MongoDB 6
+branch: app/x01-data-mongo
+kind: docker-compose
+layer: data
+status: stopped
+project: /home/dev/infra/data/mongo
+containers:
+  - name: x01-data-mongo
+    image: mongo:6
+    ports: ["127.0.0.1:27017:27017"]
+    volumes: ["./data/db:/data/db"]
+    network: x01-data-net
+    restart: unless-stopped
+    healthcheck: "mongosh --quiet --eval db.adminCommand('ping').ok"
+env:
+  file: .env
+  keys: [MONGO_INITDB_ROOT_USERNAME, MONGO_INITDB_ROOT_PASSWORD]
+paths:
+  compose: compose.yaml
+  data: ./data/db
+depends_on: []
+notes:
+  - /data/configdb 未持久化
+  - 数据目录 uid 999

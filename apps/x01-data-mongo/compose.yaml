@@ -1,0 +1,33 @@
+name: x01-data-mongo
+
+services:
+  mongo:
+    image: mongo:6
+    container_name: x01-data-mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      TZ: UTC
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - ./data/db:/data/db
+    networks:
+      - x01-data-net
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    labels:
+      x01.layer: data
+      x01.module: mongo
+    logging:
+      driver: json-file
+      options: { max-size: "20m", max-file: "3" }
+
+networks:
+  x01-data-net:
+    external: true
