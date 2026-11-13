@@ -1,0 +1,31 @@
+name: x01-net-substore
+
+services:
+  sub-store:
+    image: xream/sub-store:latest
+    container_name: x01-net-substore
+    # 2026-10-29 停用：避免占用物理机，restart 固定为 no
+    restart: "no"
+    environment:
+      SUB_STORE_FRONTEND_BACKEND_PATH: ${SUB_STORE_FRONTEND_BACKEND_PATH}
+      # 拉取上游订阅的代理；mihomo TUN 生效后置空
+      SUB_STORE_BACKEND_DEFAULT_PROXY: ${SUB_STORE_BACKEND_DEFAULT_PROXY:-}
+      # 2026-10-29 关闭订阅同步 cron（原 0 */6 * * *）
+      SUB_STORE_BACKEND_SYNC_CRON: "0 0 31 2 *"
+      TZ: Asia/Shanghai
+    ports:
+      - "3002:3001"
+    volumes:
+      - ./data:/opt/app/data
+    labels:
+      x01.layer: net
+      x01.module: sub-store
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3001/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    logging:
+      driver: json-file
+      options: { max-size: "20m", max-file: "3" }

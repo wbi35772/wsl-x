@@ -1,0 +1,26 @@
+slug: x01-net-substore
+name: Sub-Store
+branch: app/x01-net-substore
+kind: docker-compose
+layer: net
+status: deprecated
+project: /home/dev/infra/net/substore
+containers:
+  - name: x01-net-substore
+    image: xream/sub-store:latest
+    ports: ["3002:3001"]
+    volumes: ["./data:/opt/app/data"]
+    network: x01-net-substore_default
+    restart: "no"
+    healthcheck: "node -e fetch('http://127.0.0.1:3001/')"
+env:
+  file: .env
+  keys: [SUB_STORE_FRONTEND_BACKEND_PATH, SUB_STORE_BACKEND_DEFAULT_PROXY]
+paths:
+  compose: compose.yaml
+  data: ./data
+depends_on: []
+notes:
+  - 2026-10-29 停用
+  - 同步 cron 永不再触发
+  - 后台路径为随机串
